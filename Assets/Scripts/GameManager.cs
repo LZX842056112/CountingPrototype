@@ -17,10 +17,10 @@ public class GameManager : MonoBehaviour
     public bool isGameActive;
 
     public Button startButton;
-    public GameObject titleScreen;
 
     public TextMeshProUGUI gameOverText;
     public Button restartButton;
+    public Button backButton;
 
     public GameObject powerUp;
     private float spawnRangex = 20;
@@ -30,8 +30,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startButton = GetComponent<Button>();
-        startButton.onClick.AddListener(StartGame);
+        //startButton = GetComponent<Button>();
+        //startButton.onClick.AddListener(StartGame);
+        StartGame();
     }
     public void StartGame()
     {
@@ -40,8 +41,6 @@ public class GameManager : MonoBehaviour
         count = 0;
         UpdateCount(0);
         UpdateLive(0);
-
-        titleScreen.gameObject.SetActive(false);
 
         UnityEngine.Cursor.lockState = CursorLockMode.Locked; // 锁定光标到屏幕中心
         //防止 刚体影响 镜头旋转
@@ -105,13 +104,22 @@ public class GameManager : MonoBehaviour
     }
     public void GameOver()
     {
+        if (MenuManager.Instance.bestScore < count)
+        {
+            MenuManager.Instance.SaveName(count);
+        }
         isGameActive = false;
         gameOverText.gameObject.SetActive(true);
         restartButton.gameObject.SetActive(true);
+        backButton.gameObject.SetActive(true);
         UnityEngine.Cursor.lockState = CursorLockMode.None;
     }
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void BackGame()
+    {
+        SceneManager.LoadScene(0);
     }
 }
